@@ -1,0 +1,72 @@
+# Variables de entorno - TMS Service
+
+## Servicio
+
+```env
+NODE_ENV=development
+PORT=4010
+SERVICE_NAME=tms-service
+```
+
+## SQL Server
+
+```env
+DB_USER=sa
+DB_PASSWORD=YourStrongPassword123
+DB_SERVER=localhost
+DB_PORT=14330
+DB_NAME=TmsServiceDB
+DB_ENCRYPT=false
+DB_TRUST_SERVER_CERTIFICATE=true
+```
+
+Alias soportados:
+
+```env
+SQLSERVER_USER
+SQLSERVER_PASSWORD
+SQLSERVER_HOST
+SQLSERVER_PORT
+SQLSERVER_DATABASE
+SQLSERVER_ENCRYPT
+SQLSERVER_TRUST_SERVER_CERTIFICATE
+```
+
+## Kafka
+
+```env
+KAFKA_CLIENT_ID=tms-service
+KAFKA_BROKERS=localhost:9092
+KAFKA_GROUP_ID=tms-service-group
+```
+
+`KAFKA_BROKERS` puede recibir multiples brokers separados por coma.
+
+## Bootstrap
+
+```env
+SKIP_DATABASE_BOOTSTRAP=false
+SKIP_KAFKA_BOOTSTRAP=false
+SKIP_JOBS_BOOTSTRAP=false
+SKIP_LISTENERS_BOOTSTRAP=false
+```
+
+Usar `true` solo para desarrollo local o tests sin infraestructura.
+
+## Servicios externos
+
+```env
+OMS_SERVICE_URL=http://localhost:4001/api
+DELIVERY_SERVICE_URL=http://localhost:4002/api
+WMS_SERVICE_URL=http://localhost:4003/api
+PACKING_SERVICE_URL=http://localhost:4004/api
+NOTIFICATION_SERVICE_URL=http://localhost:4005/api
+DOCUMENT_SERVICE_URL=http://localhost:4006/api
+USER_SERVICE_URL=http://localhost:4007/api
+```
+
+Si una URL no esta configurada y se intenta llamar al cliente HTTP, el servicio lanzara:
+
+```txt
+HTTP request URL is not configured
+```

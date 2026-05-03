@@ -1,0 +1,5 @@
+/**
+ * Port contract:
+ *
+ * publish(event)
+ */

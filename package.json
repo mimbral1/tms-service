@@ -1,0 +1,45 @@
+{
+  "name": "tms-service",
+  "version": "0.1.0",
+  "description": "Transportation Management Service backend built with clean architecture boundaries.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "dev:local": "node --watch scripts/dev.local.js",
+    "start:local": "node scripts/dev.local.js",
+    "infra:check": "node scripts/infra.docker.js check",
+    "infra:up": "node scripts/infra.docker.js up",
+    "infra:down": "node scripts/infra.docker.js down",
+    "infra:reset": "node scripts/infra.docker.js reset",
+    "infra:ps": "node scripts/infra.docker.js ps",
+    "db:create": "node scripts/db.setup.js create",
+    "db:migrate": "node scripts/db.setup.js migrate",
+    "db:seed": "node scripts/db.setup.js seed",
+    "db:setup": "node scripts/db.setup.js all",
+    "test": "node --test",
+    "lint": "node --check src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "kafkajs": "^2.2.4",
+    "mssql": "^11.0.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "eslint": "^10.3.0",
+    "jest": "^30.3.0",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
+  }
+}
