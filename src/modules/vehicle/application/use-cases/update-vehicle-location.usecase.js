@@ -1,3 +1,4 @@
+import { withTransaction } from '../../../../infrastructure/database/sqlserver.transaction.js';
 import { TMS_VEHICLE_LOCATION_UPDATED } from '../../../../infrastructure/kafka/kafka.topics.js';
 import { OutboxEvent } from '../../../../outbox/domain/OutboxEvent.js';
 import { NotFoundError } from '../../../../shared/errors/NotFoundError.js';
@@ -18,18 +19,26 @@ export class UpdateVehicleLocationUseCase {
 
     vehicle.updateLocation(input);
 
-    const updated = await this.vehicleRepository.updateVehicleLocation(vehicle);
-
-    for (const event of vehicle.pullDomainEvents()) {
-      await this.outboxRepository.create(
-        OutboxEvent.create({
-          topic: TMS_VEHICLE_LOCATION_UPDATED,
-          eventType: event.eventType,
-          aggregateId: event.aggregateId,
-          payload: event.payload,
-        }),
+    const updated = await withTransaction(async ({ transaction }) => {
+      const updatedVehicle = await this.vehicleRepository.updateVehicleLocation(
+        vehicle,
+        transaction,
       );
-    }
+
+      for (const event of vehicle.pullDomainEvents()) {
+        await this.outboxRepository.create(
+          OutboxEvent.create({
+            topic: TMS_VEHICLE_LOCATION_UPDATED,
+            eventType: event.eventType,
+            aggregateId: event.aggregateId,
+            payload: event.payload,
+          }),
+          transaction,
+        );
+      }
+
+      return updatedVehicle;
+    });
 
     return vehicleOutput(updated);
   }
