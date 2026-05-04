@@ -1,5 +1,4 @@
 import { getSqlServerPool, sql } from '../../database/sqlserver.connection.js';
-import { getSqlServerPool, sql } from '../../database/sqlserver.connection.js';
 import { createTransactionRequest } from '../../database/sqlserver.transaction.js';
 
 import {
@@ -127,11 +126,14 @@ export class VehicleRepository {
     return this.findVehicleById(vehicle.id);
   }
 
-  async updateVehicleLocation(vehicle) {
+  async updateVehicleLocation(vehicle, transaction = null) {
     const pool = getSqlServerPool();
 
-    await pool
-      .request()
+    const request = transaction
+      ? createTransactionRequest(transaction)
+      : pool.request();
+
+    await request
       .input('Id', sql.UniqueIdentifier, vehicle.id)
       .input('Latitude', sql.Decimal(10, 7), vehicle.lastKnownLatitude)
       .input('Longitude', sql.Decimal(10, 7), vehicle.lastKnownLongitude)
