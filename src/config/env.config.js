@@ -90,6 +90,12 @@ export const env = {
     groupId: value.KAFKA_GROUP_ID,
   },
 
+  auth: {
+    internalApiKey: value.INTERNAL_API_KEY,
+  },
+
+services: {
+
   services: {
     oms: value.OMS_SERVICE_URL,
     delivery: value.DELIVERY_SERVICE_URL,
