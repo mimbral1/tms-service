@@ -1,4 +1,5 @@
 import { getSqlServerPool, sql } from '../../database/sqlserver.connection.js';
+import { createTransactionRequest } from '../../database/sqlserver.transaction.js';
 import { OutboxStatus } from '../../../outbox/domain/OutboxStatus.js';
 import { BaseRepository } from './base.repository.js';
 
@@ -7,11 +8,14 @@ export class OutboxRepository extends BaseRepository {
     super('tms.OutboxEvent');
   }
 
-  async create(event) {
+  async create(event, transaction = null) {
     const pool = getSqlServerPool();
 
-    await pool
-      .request()
+    const request = transaction
+      ? createTransactionRequest(transaction)
+      : pool.request();
+
+    await request
       .input('Id', sql.UniqueIdentifier, event.id)
       .input('Topic', sql.NVarChar(200), event.topic)
       .input('EventType', sql.NVarChar(200), event.eventType)
