@@ -25,4 +25,23 @@ export function getSqlServerPool() {
   return pool;
 }
 
+export async function checkSqlServerConnection() {
+  try {
+    const currentPool = getSqlServerPool();
+
+    await currentPool.request().query('SELECT 1 AS ok');
+
+    return {
+      success: true,
+      status: 'connected',
+    };
+  } catch (error) {
+    return {
+      success: false,
+      status: 'disconnected',
+      error: error.message,
+    };
+  }
+}
+
 export { sql };
