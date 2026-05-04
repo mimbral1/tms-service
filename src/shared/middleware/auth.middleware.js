@@ -5,8 +5,25 @@ export function authMiddleware(req, _res, next) {
   const apiKey = req.headers['x-api-key'];
   const userId = req.headers['x-user-id'];
 
-  if (env.nodeEnv !== 'development' && !apiKey) {
+  const isDevelopment = env.nodeEnv === 'development';
+  const configuredApiKey = env.auth.internalApiKey;
+
+  if (!isDevelopment && !configuredApiKey) {
+    throw new AppError('Internal API key is not configured', {
+      statusCode: 500,
+      code: 'INTERNAL_API_KEY_NOT_CONFIGURED',
+    });
+  }
+
+  if (!isDevelopment && !apiKey) {
     throw new AppError('Missing x-api-key header', {
+      statusCode: 401,
+      code: 'UNAUTHORIZED',
+    });
+  }
+
+  if (!isDevelopment && apiKey !== configuredApiKey) {
+    throw new AppError('Invalid x-api-key header', {
       statusCode: 401,
       code: 'UNAUTHORIZED',
     });
