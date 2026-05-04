@@ -1,4 +1,7 @@
 import { getSqlServerPool, sql } from '../../database/sqlserver.connection.js';
+import { getSqlServerPool, sql } from '../../database/sqlserver.connection.js';
+import { createTransactionRequest } from '../../database/sqlserver.transaction.js';
+
 import {
   vehicleToDomain,
   vehicleTypeToDomain,
