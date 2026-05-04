@@ -1,9 +1,10 @@
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
+import { HealthRoutes } from './interfaces/http/health.routes.js';
+import { apiRoutes } from './routes/index.routes.js';
 import { errorMiddleware } from './shared/middleware/error.middleware.js';
 import { requestIdMiddleware } from './shared/middleware/request-id.middleware.js';
-import { apiRoutes } from './routes/index.routes.js';
 
 export function createApp() {
   const app = express();
@@ -13,14 +14,7 @@ export function createApp() {
   app.use(express.json({ limit: '10mb' }));
   app.use(requestIdMiddleware);
 
-  app.get('/health', (_req, res) => {
-    res.json({
-      success: true,
-      service: 'tms-service',
-      status: 'healthy',
-      timestamp: new Date().toISOString(),
-    });
-  });
+  app.use(HealthRoutes());
 
   app.use('/api', apiRoutes());
 
