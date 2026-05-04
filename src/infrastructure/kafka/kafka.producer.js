@@ -1,6 +1,6 @@
+import { Partitioners } from 'kafkajs';
 import { logger } from '../../config/logger.config.js';
 import { kafka } from './kafka.client.js';
-import { Partitioners } from 'kafkajs';
 
 export const producer = kafka.producer({
   createPartitioner: Partitioners.LegacyPartitioner,
@@ -16,6 +16,32 @@ export async function connectKafkaProducer() {
 
   logger.info('Kafka producer connected');
   return producer;
+}
+
+export function isKafkaProducerConnected() {
+  return connected;
+}
+
+export async function checkKafkaProducerConnection() {
+  try {
+    if (!connected) {
+      return {
+        success: false,
+        status: 'disconnected',
+      };
+    }
+
+    return {
+      success: true,
+      status: 'connected',
+    };
+  } catch (error) {
+    return {
+      success: false,
+      status: 'error',
+      error: error.message,
+    };
+  }
 }
 
 export async function publishKafkaMessage(topic, message) {
