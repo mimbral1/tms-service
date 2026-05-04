@@ -35,6 +35,8 @@ const envSchema = z
     KAFKA_BROKERS: z.string().default('localhost:9092'),
     KAFKA_GROUP_ID: z.string().default('tms-service-group'),
 
+    INTERNAL_API_KEY: z.string().optional(),
+
     SKIP_DATABASE_BOOTSTRAP: envBoolean.default(false),
     SKIP_KAFKA_BOOTSTRAP: envBoolean.default(false),
     SKIP_JOBS_BOOTSTRAP: envBoolean.default(false),
